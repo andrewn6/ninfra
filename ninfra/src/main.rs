@@ -51,7 +51,7 @@ async fn provision_handler(service: String, _conn: SqlitePool, cache: Cache) -> 
 async fn main() -> sqlx::Result<()> {
   let pool = SqlitePool::connect_with(
     SqliteConnectOptions::new()
-      .filename("../../db/ninfra.db")
+      .filename("./ninfra.db")
       .create_if_missing(true)
   ).await?;
 
@@ -76,7 +76,8 @@ async fn main() -> sqlx::Result<()> {
     .and(cache_filter.clone())
     .and_then(provision_handler);
 
-  warp::serve(provision).run(([127, 0, 0 ,1], 3030));
+  println!("Listening on port 3030");
+  warp::serve(provision).run(([127, 0, 0 ,1], 3030)).await;
 
   Ok(())
 }
